@@ -23,6 +23,7 @@ POSITIVE_WORDS = [
     "chill",
     "relaxed",
     "amazing",
+    "fire",
 ]
 
 NEGATIVE_WORDS = [
@@ -107,3 +108,15 @@ TRUE_LABELS.append("positive")
 
 SAMPLE_POSTS.append("I absolutely love getting stuck in traffic")
 TRUE_LABELS.append("negative")
+
+SAMPLE_POSTS.append("This game is fire")
+TRUE_LABELS.append("positive")
+
+SAMPLE_POSTS.append("This house is on fire")
+TRUE_LABELS.append("negative")
+
+SAMPLE_POSTS.append("My happy home is on fire")
+TRUE_LABELS.append("negative")
+
+SAMPLE_POSTS.append("He was on fire all game")
+TRUE_LABELS.append("positive")

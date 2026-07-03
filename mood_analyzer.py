@@ -151,6 +151,22 @@ class MoodAnalyzer:
     # Scoring logic
     # ---------------------------------------------------------------------
 
+    def _score_semantic_phrase(self, tokens: List[str], i: int) -> int:
+        """
+        Check for semantic phrases that override word-level scoring.
+
+        Returns:
+          - Non-zero score if a semantic phrase is matched (consume the token)
+          - 0 if no semantic phrase applies (caller continues with standard logic)
+        """
+        token = tokens[i]
+
+        # "on fire" → literal fire (negative), not slang "that's fire" (positive)
+        if token == "fire" and i > 0 and tokens[i - 1] == "on":
+            return -1
+
+        return 0
+
     def score_text(self, text: str) -> int:
         """
         Compute a numeric "mood score" for the given text.
@@ -159,12 +175,19 @@ class MoodAnalyzer:
         Negative words decrease the score.
 
         Handles negation: "not happy" or "never fun" flips sentiment.
+        Handles semantic phrases: "on fire" is negative (literal), standalone "fire" is positive (slang).
         """
         tokens = self.preprocess(text)
         score = 0
         negation_words = {"not", "never", "no", "dont", "cannot", "can't"}
 
         for i, token in enumerate(tokens):
+            # Check for semantic phrases that override standard word scoring
+            semantic_score = self._score_semantic_phrase(tokens, i)
+            if semantic_score != 0:
+                score += semantic_score
+                continue
+
             is_negated = i > 0 and tokens[i - 1] in negation_words
 
             if token in self.positive_words:
